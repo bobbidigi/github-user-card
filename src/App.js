@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import React, { Component } from 'react'
+import axios from 'axios'
+import Card from './components/Card'
+import Followers from './components/Followers'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+
+  constructor(){
+    super();
+    this.state = {
+      user: [],
+      followers: []
+    }
+  }
+
+  componentDidMount(){
+    this.fetchUserData() 
+    this.fetchFollowers()
+  }
+
+
+
+fetchUserData = () => {
+  axios.get('https://api.github.com/users/bobbidigi')
+      .then(res => {
+      console.log(res.data)
+      this.setState({user: res.data})   
+    })
+    .catch(error => {
+      console.log(error)
+    })
+} 
+
+
+fetchFollowers = () => {
+  axios.get('https://api.github.com/users/bobbidigi/followers')
+      .then(res => {
+      console.log(res.data)
+      this.setState({followers: res.data})   
+    })
+    .catch(error => {
+      console.log(error)
+    })
+} 
+
+  render() {
+    return (
+      <div className="container">
+        <Card user={this.state.user}/>
+        <Followers followers={this.state.followers}/>
+      </div>
+    )
+  }
 }
 
-export default App;
